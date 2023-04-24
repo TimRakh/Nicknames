@@ -16,21 +16,21 @@ class  Main{
         Thread palindrome = new Thread(()->{
                 for(String text : texts){
                     if(isPalindrome(text)&& !sameChar(text)) {
-                        count1.getAndIncrement();
+                        increasingAtomic(text);
                     }
             }
         });
         palindrome.start();
         Thread theSameChar = new Thread(()->{
             for(String text : texts){
-                if(sameChar(text)) count2.getAndIncrement();
+                if(sameChar(text)) increasingAtomic(text);
             }
         });
         theSameChar.start();
 
         Thread increasing = new Thread(()->{
             for(String text : texts){
-                if(!isPalindrome(text)&& increasingOrder(text)) count3.getAndIncrement();
+                if(!isPalindrome(text)&& increasingOrder(text)) increasingAtomic(text);
             }
         });
         increasing.start();
@@ -43,6 +43,11 @@ class  Main{
         System.out.println("Красивых слов одной и той же буквы :" + count2);
         System.out.println("Красивых слов с возрастающими буквами :" + count3);
 
+    }
+    public static void increasingAtomic(String text){
+        if (text.length() == 3) count1.getAndIncrement();
+        if (text.length() == 4) count2.getAndIncrement();
+        if(text.length() == 5) count3.getAndIncrement();
     }
     public static boolean isPalindrome(String text){
         return text.equals(new StringBuilder(text).reverse().toString());
